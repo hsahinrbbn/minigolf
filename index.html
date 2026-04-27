@@ -303,11 +303,11 @@
             // Save team name for next hole
             localStorage.setItem('minigolf_player', teamName);
             
-            // Build MS Forms URL with pre-filled values
+            // Build MS Forms URL with pre-filled values (quotes required by MS Forms)
             const formUrl = MS_FORMS_BASE_URL + 
-                '&' + QUESTION_IDS.team + '=' + encodeURIComponent(teamName) +
-                '&' + QUESTION_IDS.hole + '=' + encodeURIComponent(holeName) +
-                '&' + QUESTION_IDS.strokes + '=' + encodeURIComponent(selectedStrokes);
+                '&' + QUESTION_IDS.team + '="' + encodeURIComponent(teamName) + '"' +
+                '&' + QUESTION_IDS.hole + '="' + encodeURIComponent(holeName) + '"' +
+                '&' + QUESTION_IDS.strokes + '="' + encodeURIComponent(selectedStrokes) + '"';
             
             // Show success message
             const scoreText = selectedStrokes === 1 ? '🎉 HOLE IN ONE!' : 

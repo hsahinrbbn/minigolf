@@ -230,12 +230,7 @@
             "Team 2",
             "Team 3",
             "Team 4",
-            "Team 5",
-            "Team 6",
-            "Team 7",
-            "Team 8",
-            "Team 9",
-            "Team 10"
+            "Team 5"
         ];
         
         // ============================================================
@@ -310,9 +305,9 @@
             
             // Build MS Forms URL with pre-filled values
             const formUrl = MS_FORMS_BASE_URL + 
-                '&' + QUESTION_IDS.team + '=' + encodeURIComponent('"' + teamName + '"') +
-                '&' + QUESTION_IDS.hole + '=' + encodeURIComponent('"' + holeName + '"') +
-                '&' + QUESTION_IDS.strokes + '=' + encodeURIComponent('"' + selectedStrokes + '"');
+                '&' + QUESTION_IDS.team + '=' + encodeURIComponent(teamName) +
+                '&' + QUESTION_IDS.hole + '=' + encodeURIComponent(holeName) +
+                '&' + QUESTION_IDS.strokes + '=' + encodeURIComponent(selectedStrokes);
             
             // Show success message
             const scoreText = selectedStrokes === 1 ? '🎉 HOLE IN ONE!' : 

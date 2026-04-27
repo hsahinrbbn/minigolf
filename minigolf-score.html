@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Golf Score Entry</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a5f2a 0%, #2e7d32 50%, #43a047 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #2e7d32;
+            margin: 0;
+            font-size: 28px;
+        }
+        .hole-display {
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .hole-display .label { font-size: 16px; opacity: 0.9; }
+        .hole-display .number { font-size: 64px; font-weight: bold; line-height: 1; }
+        .hole-display .par { font-size: 14px; opacity: 0.8; margin-top: 5px; }
+        .hole-display .name { font-size: 18px; font-weight: 600; margin-top: 8px; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #2e7d32;
+        }
+        
+        .strokes-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+        .stroke-btn {
+            padding: 15px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .stroke-btn:hover { border-color: #2e7d32; }
+        .stroke-btn.selected {
+            background: #2e7d32;
+            color: white;
+            border-color: #2e7d32;
+        }
+        .stroke-btn.hole-in-one.selected {
+            background: #ffd700;
+            color: #333;
+            border-color: #ffd700;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2e7d32, #43a047);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(46,125,50,0.4);
+        }
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+        .status.success {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>⛳ Mini Golf</h1>
+        </div>
+        
+        <div class="hole-display">
+            <div class="label">HOLE</div>
+            <div class="number" id="holeNum">1</div>
+            <div class="name" id="holeName">Birdie RAMPage</div>
+            <div class="par">Par <span id="parNum">3</span></div>
+        </div>
+        
+        <div class="form-group">
+            <label>👤 Select Your Team</label>
+            <select id="playerName">
+                <option value="">-- Select Team --</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>🏌️ Number of Strokes</label>
+            <div class="strokes-grid">
+                <button class="stroke-btn hole-in-one" data-strokes="1">1</button>
+                <button class="stroke-btn" data-strokes="2">2</button>
+                <button class="stroke-btn selected" data-strokes="3">3</button>
+                <button class="stroke-btn" data-strokes="4">4</button>
+                <button class="stroke-btn" data-strokes="5">5</button>
+                <button class="stroke-btn" data-strokes="6">6</button>
+                <button class="stroke-btn" data-strokes="7">7</button>
+                <button class="stroke-btn" data-strokes="8">8</button>
+                <button class="stroke-btn" data-strokes="9">9</button>
+                <button class="stroke-btn" data-strokes="10">10+</button>
+            </div>
+        </div>
+        
+        <button class="submit-btn" id="submitBtn" onclick="submitScore()">
+            Submit Score
+        </button>
+        
+        <div class="status" id="status"></div>
+        
+        <div class="footer">
+            Scan QR code at each hole to enter your score
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONFIGURATION - Update these values
+        // ============================================================
+        
+        // Power Automate HTTP trigger URL (you'll get this when creating the flow)
+        const POWER_AUTOMATE_URL = 'YOUR_POWER_AUTOMATE_HTTP_TRIGGER_URL';
+        
+        // Par values for each hole (customize as needed)
+        const HOLE_PARS = {
+            1: 3, 2: 3, 3: 3, 4: 3, 5: 3,
+            6: 3, 7: 3, 8: 3, 9: 3, 10: 3
+        };
+        
+        // Hole names (customize as needed)
+        const HOLE_NAMES = {
+            1: "Birdie RAMPage",
+            2: "Lab Putters",
+            3: "AS Team",
+            4: "Tech Putts",
+            5: "Project X Team",
+            6: "Steve's Team",
+            7: "The Four Corners",
+            8: "Dev Ops Corner",
+            9: "DBS Team Area",
+            10: "The Process"
+        };
+        
+        // Team names for dropdown (customize as needed)
+        const TEAMS = [
+            "Team 1",
+            "Team 2",
+            "Team 3",
+            "Team 4",
+            "Team 5",
+            "Team 6",
+            "Team 7",
+            "Team 8",
+            "Team 9",
+            "Team 10"
+        ];
+        
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        
+        // Get hole number from URL parameter: ?hole=5
+        const params = new URLSearchParams(window.location.search);
+        const holeNumber = params.get('hole') || '1';
+        const parValue = HOLE_PARS[parseInt(holeNumber)] || 3;
+        const holeName = HOLE_NAMES[parseInt(holeNumber)] || '';
+        
+        // Set hole, name, and par display
+        document.getElementById('holeNum').textContent = holeNumber;
+        document.getElementById('holeName').textContent = holeName;
+        document.getElementById('parNum').textContent = parValue;
+        
+        // Populate team dropdown
+        const teamSelect = document.getElementById('playerName');
+        TEAMS.forEach(team => {
+            const option = document.createElement('option');
+            option.value = team;
+            option.textContent = team;
+            teamSelect.appendChild(option);
+        });
+        
+        // Restore last selected team from localStorage
+        const savedTeam = localStorage.getItem('minigolf_player');
+        if (savedTeam && TEAMS.includes(savedTeam)) {
+            teamSelect.value = savedTeam;
+        }
+        
+        // Pre-select par as default strokes
+        let selectedStrokes = parValue;
+        document.querySelectorAll('.stroke-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            if (parseInt(btn.dataset.strokes) === parValue) {
+                btn.classList.add('selected');
+            }
+        });
+        
+        
+        // ============================================================
+        // STROKE SELECTION
+        // ============================================================
+        
+        document.querySelectorAll('.stroke-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.stroke-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedStrokes = parseInt(this.dataset.strokes);
+            });
+        });
+        
+        // ============================================================
+        // SUBMIT SCORE
+        // ============================================================
+        
+        async function submitScore() {
+            const playerName = document.getElementById('playerName').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
+            const statusEl = document.getElementById('status');
+            
+            // Validation
+            if (!playerName) {
+                showStatus('Please enter your name', 'error');
+                document.getElementById('playerName').focus();
+                return;
+            }
+            
+            // Save player name for next hole
+            localStorage.setItem('minigolf_player', playerName);
+            
+            // Prepare data
+            const scoreData = {
+                Timestamp: new Date().toISOString(),
+                Player: playerName,
+                Hole: parseInt(holeNumber),
+                Par: parValue,
+                Strokes: selectedStrokes,
+                Score: selectedStrokes - parValue,  // Relative to par
+                Date: new Date().toLocaleDateString('en-US'),
+                Time: new Date().toLocaleTimeString('en-US', { hour12: false })
+            };
+            
+            // Disable button during submission
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                const response = await fetch(POWER_AUTOMATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(scoreData)
+                });
+                
+                if (response.ok) {
+                    const scoreText = selectedStrokes === 1 ? '🎉 HOLE IN ONE!' : 
+                                     selectedStrokes <= parValue ? '👏 Great shot!' : 
+                                     'Score recorded!';
+                    showStatus(`✅ ${scoreText}`, 'success');
+                    
+                    // Reset for next entry (keep player name)
+                    setTimeout(() => {
+                        statusEl.style.display = 'none';
+                    }, 3000);
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                showStatus('❌ Error submitting. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Score';
+            }
+        }
+        
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = 'status ' + type;
+        }
+        
+    </script>
+</body>
+</html>

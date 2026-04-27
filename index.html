@@ -158,7 +158,7 @@
         </div>
         
         <div class="form-group">
-            <label>👤 Select Your Team</label>
+            <label>� Select Your Team</label>
             <select id="playerName">
                 <option value="">-- Select Team --</option>
             </select>
@@ -196,8 +196,13 @@
         // CONFIGURATION - Update these values
         // ============================================================
         
-        // Power Automate HTTP trigger URL (you'll get this when creating the flow)
-        const POWER_AUTOMATE_URL = 'YOUR_POWER_AUTOMATE_HTTP_TRIGGER_URL';
+        // Microsoft Forms URL and question IDs
+        const MS_FORMS_BASE_URL = 'https://forms.office.com/Pages/ResponsePage.aspx?id=3HGmKX7tVEqx5Y2h60ldw1u5ihd0gv1NgiIcvqBwaUtUMVJFMkVXWVNVRExaTk42U0hJVU1IMjhSSC4u';
+        const QUESTION_IDS = {
+            team: 'r435555ec07c643a3832af55d3af266a2',
+            hole: 'rd835b512715d4a779d9334a32a64bc98',
+            strokes: 'rd4aa5dc3c8ed4fea845f772c6ed15cd8'
+        };
         
         // Par values for each hole (customize as needed)
         const HOLE_PARS = {
@@ -289,66 +294,36 @@
         // SUBMIT SCORE
         // ============================================================
         
-        async function submitScore() {
-            const playerName = document.getElementById('playerName').value.trim();
+        function submitScore() {
+            const teamName = document.getElementById('playerName').value.trim();
             const submitBtn = document.getElementById('submitBtn');
-            const statusEl = document.getElementById('status');
             
             // Validation
-            if (!playerName) {
-                showStatus('Please enter your name', 'error');
+            if (!teamName) {
+                showStatus('Please select your team', 'error');
                 document.getElementById('playerName').focus();
                 return;
             }
             
-            // Save player name for next hole
-            localStorage.setItem('minigolf_player', playerName);
+            // Save team name for next hole
+            localStorage.setItem('minigolf_player', teamName);
             
-            // Prepare data
-            const scoreData = {
-                Timestamp: new Date().toISOString(),
-                Team: playerName,
-                Hole: parseInt(holeNumber),
-                Par: parValue,
-                Strokes: selectedStrokes,
-                Score: selectedStrokes - parValue,  // Relative to par
-                Date: new Date().toLocaleDateString('en-US'),
-                Time: new Date().toLocaleTimeString('en-US', { hour12: false })
-            };
+            // Build MS Forms URL with pre-filled values
+            const formUrl = MS_FORMS_BASE_URL + 
+                '&' + QUESTION_IDS.team + '=' + encodeURIComponent('"' + teamName + '"') +
+                '&' + QUESTION_IDS.hole + '=' + encodeURIComponent('"' + holeName + '"') +
+                '&' + QUESTION_IDS.strokes + '=' + encodeURIComponent('"' + selectedStrokes + '"');
             
-            // Disable button during submission
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
+            // Show success message
+            const scoreText = selectedStrokes === 1 ? '🎉 HOLE IN ONE!' : 
+                             selectedStrokes <= parValue ? '👏 Great shot!' : 
+                             'Score recorded!';
+            showStatus(`✅ ${scoreText} Redirecting...`, 'success');
             
-            try {
-                const response = await fetch(POWER_AUTOMATE_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(scoreData)
-                });
-                
-                if (response.ok) {
-                    const scoreText = selectedStrokes === 1 ? '🎉 HOLE IN ONE!' : 
-                                     selectedStrokes <= parValue ? '👏 Great shot!' : 
-                                     'Score recorded!';
-                    showStatus(`✅ ${scoreText}`, 'success');
-                    
-                    // Reset for next entry (keep player name)
-                    setTimeout(() => {
-                        statusEl.style.display = 'none';
-                    }, 3000);
-                } else {
-                    throw new Error('Server error');
-                }
-            } catch (error) {
-                console.error('Submit error:', error);
-                showStatus('❌ Error submitting. Please try again.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Score';
-            }
+            // Redirect to MS Forms after brief delay
+            setTimeout(() => {
+                window.location.href = formUrl;
+            }, 500);
         }
         
         function showStatus(message, type) {

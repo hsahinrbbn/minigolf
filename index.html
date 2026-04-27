@@ -304,10 +304,12 @@
             localStorage.setItem('minigolf_player', teamName);
             
             // Build MS Forms URL with pre-filled values (quotes required by MS Forms)
+            // Add timestamp to prevent "draft" popup
             const formUrl = MS_FORMS_BASE_URL + 
                 '&' + QUESTION_IDS.team + '="' + encodeURIComponent(teamName) + '"' +
                 '&' + QUESTION_IDS.hole + '="' + encodeURIComponent(holeName) + '"' +
-                '&' + QUESTION_IDS.strokes + '="' + encodeURIComponent(selectedStrokes) + '"';
+                '&' + QUESTION_IDS.strokes + '="' + encodeURIComponent(selectedStrokes) + '"' +
+                '&_=' + Date.now();
             
             // Show success message
             const scoreText = selectedStrokes === 1 ? '🎉 HOLE IN ONE!' : 

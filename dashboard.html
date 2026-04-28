@@ -74,6 +74,17 @@
             background: #f9f9f9;
         }
         
+        .dashboard-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-frame.half {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
         iframe {
             width: 100%;
             border: none;
@@ -148,15 +159,29 @@
             </div>
         </div>
         
-        <div class="dashboard-frame">
-            <div class="frame-header">📊 Raw Scores</div>
-            <div class="frame-content">
-                <iframe 
-                    id="scoresFrame"
-                    height="300" 
-                    scrolling="no" 
-                    src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=Scores&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
-                </iframe>
+        <div class="dashboard-row">
+            <div class="dashboard-frame half">
+                <div class="frame-header">🎯 Hole Stats</div>
+                <div class="frame-content">
+                    <iframe 
+                        id="holeStatsFrame"
+                        height="250" 
+                        scrolling="no" 
+                        src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=HoleStats&wdHideGridlines=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
+                    </iframe>
+                </div>
+            </div>
+            
+            <div class="dashboard-frame half">
+                <div class="frame-header">🏌️ Hole-in-One Tracker</div>
+                <div class="frame-content">
+                    <iframe 
+                        id="holeInOneFrame"
+                        height="250" 
+                        scrolling="no" 
+                        src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=PivotTable2&wdHideGridlines=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
+                    </iframe>
+                </div>
             </div>
         </div>
         
@@ -177,7 +202,7 @@
         
         function refreshFrame() {
             // Refresh both iframes
-            const frames = ['leaderboardFrame', 'scoresFrame'];
+            const frames = ['leaderboardFrame', 'holeStatsFrame', 'holeInOneFrame'];
             const timestamp = Date.now();
             frames.forEach(id => {
                 const frame = document.getElementById(id);

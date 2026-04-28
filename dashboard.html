@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Golf Leaderboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a5d1a 0%, #0d3d0d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .refresh-info {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .refresh-info span {
+            color: #90EE90;
+            font-weight: bold;
+        }
+        
+        .dashboard-frame {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .frame-header {
+            background: linear-gradient(135deg, #2d5a2d 0%, #1a3d1a 100%);
+            color: white;
+            padding: 15px 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .frame-content {
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        
+        iframe {
+            width: 100%;
+            border: none;
+            background: white;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #2d7d2d 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            color: white;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .countdown {
+            font-size: 1.5rem;
+            color: #90EE90;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛳ Mini Golf Leaderboard</h1>
+            <div class="subtitle">Live Scores Dashboard</div>
+            <div class="refresh-info">
+                Auto-refresh in <span id="countdown">30</span> seconds
+            </div>
+        </div>
+        
+        <div class="dashboard-frame">
+            <div class="frame-header">📊 Scores</div>
+            <div class="frame-content">
+                <iframe 
+                    id="scoresFrame"
+                    height="400" 
+                    scrolling="no" 
+                    src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=Scores&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
+                </iframe>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="refreshNow()">🔄 Refresh Now</button>
+            <button class="btn" onclick="toggleAutoRefresh()">⏸️ Pause Auto-Refresh</button>
+        </div>
+        
+        <div class="status" id="status">
+            Last updated: <span id="lastUpdate">-</span>
+        </div>
+    </div>
+
+    <script>
+        let countdown = 30;
+        let autoRefreshEnabled = true;
+        let countdownInterval;
+        
+        function refreshFrame() {
+            const frame = document.getElementById('scoresFrame');
+            const src = frame.src;
+            // Add timestamp to force refresh
+            frame.src = src.split('&_t=')[0] + '&_t=' + Date.now();
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function refreshNow() {
+            refreshFrame();
+            countdown = 30;
+            document.getElementById('countdown').textContent = countdown;
+        }
+        
+        function toggleAutoRefresh() {
+            autoRefreshEnabled = !autoRefreshEnabled;
+            const btn = event.target;
+            if (autoRefreshEnabled) {
+                btn.textContent = '⏸️ Pause Auto-Refresh';
+                startCountdown();
+            } else {
+                btn.textContent = '▶️ Resume Auto-Refresh';
+                clearInterval(countdownInterval);
+            }
+        }
+        
+        function startCountdown() {
+            countdownInterval = setInterval(() => {
+                if (!autoRefreshEnabled) return;
+                
+                countdown--;
+                document.getElementById('countdown').textContent = countdown;
+                
+                if (countdown <= 0) {
+                    refreshFrame();
+                    countdown = 30;
+                }
+            }, 1000);
+        }
+        
+        // Initialize
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+        startCountdown();
+    </script>
+</body>
+</html>

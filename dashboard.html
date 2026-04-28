@@ -201,15 +201,31 @@
         let countdownInterval;
         
         function refreshFrame() {
-            // Refresh both iframes
+            // Refresh iframes one at a time with delay to avoid all going blank
             const frames = ['leaderboardFrame', 'holeStatsFrame', 'holeInOneFrame'];
             const timestamp = Date.now();
-            frames.forEach(id => {
-                const frame = document.getElementById(id);
-                if (frame) {
-                    frame.src = frame.src.split('&_t=')[0] + '&_t=' + timestamp;
-                }
+            
+            frames.forEach((id, index) => {
+                setTimeout(() => {
+                    const frame = document.getElementById(id);
+                    if (frame) {
+                        // Create a hidden clone, load it, then swap
+                        const newFrame = document.createElement('iframe');
+                        newFrame.id = id;
+                        newFrame.height = frame.height;
+                        newFrame.scrolling = 'no';
+                        newFrame.style.width = '100%';
+                        newFrame.style.border = 'none';
+                        newFrame.style.background = 'white';
+                        newFrame.src = frame.src.split('&_t=')[0] + '&_t=' + timestamp;
+                        
+                        newFrame.onload = () => {
+                            frame.parentNode.replaceChild(newFrame, frame);
+                        };
+                    }
+                }, index * 500); // Stagger refreshes by 500ms
             });
+            
             document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
         }
         

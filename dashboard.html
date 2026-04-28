@@ -40,18 +40,6 @@
             opacity: 0.9;
         }
         
-        .refresh-info {
-            background: rgba(255,255,255,0.1);
-            padding: 10px 20px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 15px;
-        }
-        
-        .refresh-info span {
-            color: #90EE90;
-            font-weight: bold;
-        }
         
         .dashboard-frame {
             background: white;
@@ -91,39 +79,35 @@
             background: white;
         }
         
-        .controls {
-            text-align: center;
-            margin-top: 20px;
+        .frame-content {
+            overflow: hidden;
         }
         
-        .btn {
-            background: linear-gradient(135deg, #4CAF50 0%, #2d7d2d 100%);
+        .frame-content iframe {
+            margin-bottom: -50px; /* Hide footer by cropping */
+        }
+        
+        .footer-status {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            margin-top: 10px;
+            padding: 8px;
+        }
+        
+        .btn-small {
+            background: rgba(255,255,255,0.2);
             color: white;
             border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            border-radius: 25px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            border-radius: 10px;
             cursor: pointer;
-            margin: 5px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin-left: 10px;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        
-        .status {
-            color: white;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        .countdown {
-            font-size: 1.5rem;
-            color: #90EE90;
-            font-weight: bold;
+        .btn-small:hover {
+            background: rgba(255,255,255,0.3);
         }
         
         @media (max-width: 768px) {
@@ -141,10 +125,6 @@
     <div class="container">
         <div class="header">
             <h1>⛳ Mini Golf Leaderboard</h1>
-            <div class="subtitle">Live Scores Dashboard</div>
-            <div class="refresh-info">
-                Auto-refresh in <span id="countdown">10</span> seconds
-            </div>
         </div>
         
         <div class="dashboard-frame">
@@ -185,53 +165,26 @@
             </div>
         </div>
         
-        <div class="controls">
-            <button class="btn" onclick="refreshNow()">🔄 Refresh Now</button>
-            <button class="btn" onclick="toggleAutoRefresh()">⏸️ Pause Auto-Refresh</button>
-        </div>
-        
-        <div class="status" id="status">
-            Last updated: <span id="lastUpdate">-</span>
+        <div class="footer-status">
+            Auto-refresh in <span id="countdown">30</span>s | Last updated: <span id="lastUpdate">-</span>
+            <button class="btn-small" onclick="refreshNow()">🔄</button>
+            <button class="btn-small" onclick="toggleAutoRefresh()">⏸️</button>
         </div>
     </div>
 
     <script>
-        let countdown = 10;
+        let countdown = 30;
         let autoRefreshEnabled = true;
         let countdownInterval;
         
         function refreshFrame() {
-            // Refresh iframes one at a time with delay to avoid all going blank
-            const frames = ['leaderboardFrame', 'holeStatsFrame', 'holeInOneFrame'];
-            const timestamp = Date.now();
-            
-            frames.forEach((id, index) => {
-                setTimeout(() => {
-                    const frame = document.getElementById(id);
-                    if (frame) {
-                        // Create a hidden clone, load it, then swap
-                        const newFrame = document.createElement('iframe');
-                        newFrame.id = id;
-                        newFrame.height = frame.height;
-                        newFrame.scrolling = 'no';
-                        newFrame.style.width = '100%';
-                        newFrame.style.border = 'none';
-                        newFrame.style.background = 'white';
-                        newFrame.src = frame.src.split('&_t=')[0] + '&_t=' + timestamp;
-                        
-                        newFrame.onload = () => {
-                            frame.parentNode.replaceChild(newFrame, frame);
-                        };
-                    }
-                }, index * 500); // Stagger refreshes by 500ms
-            });
-            
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+            // Full page reload to ensure SharePoint cache is bypassed
+            location.reload();
         }
         
         function refreshNow() {
             refreshFrame();
-            countdown = 10;
+            countdown = 30;
             document.getElementById('countdown').textContent = countdown;
         }
         
@@ -256,7 +209,7 @@
                 
                 if (countdown <= 0) {
                     refreshFrame();
-                    countdown = 10;
+                    countdown = 30;
                 }
             }, 1000);
         }

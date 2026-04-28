@@ -132,16 +132,28 @@
             <h1>⛳ Mini Golf Leaderboard</h1>
             <div class="subtitle">Live Scores Dashboard</div>
             <div class="refresh-info">
-                Auto-refresh in <span id="countdown">30</span> seconds
+                Auto-refresh in <span id="countdown">10</span> seconds
             </div>
         </div>
         
         <div class="dashboard-frame">
-            <div class="frame-header">📊 Scores</div>
+            <div class="frame-header">🏆 Leaderboard</div>
+            <div class="frame-content">
+                <iframe 
+                    id="leaderboardFrame"
+                    height="250" 
+                    scrolling="no" 
+                    src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=PivotTable1&wdHideGridlines=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
+                </iframe>
+            </div>
+        </div>
+        
+        <div class="dashboard-frame">
+            <div class="frame-header">📊 Raw Scores</div>
             <div class="frame-content">
                 <iframe 
                     id="scoresFrame"
-                    height="400" 
+                    height="300" 
                     scrolling="no" 
                     src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=Scores&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
                 </iframe>
@@ -159,21 +171,26 @@
     </div>
 
     <script>
-        let countdown = 30;
+        let countdown = 10;
         let autoRefreshEnabled = true;
         let countdownInterval;
         
         function refreshFrame() {
-            const frame = document.getElementById('scoresFrame');
-            const src = frame.src;
-            // Add timestamp to force refresh
-            frame.src = src.split('&_t=')[0] + '&_t=' + Date.now();
+            // Refresh both iframes
+            const frames = ['leaderboardFrame', 'scoresFrame'];
+            const timestamp = Date.now();
+            frames.forEach(id => {
+                const frame = document.getElementById(id);
+                if (frame) {
+                    frame.src = frame.src.split('&_t=')[0] + '&_t=' + timestamp;
+                }
+            });
             document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
         }
         
         function refreshNow() {
             refreshFrame();
-            countdown = 30;
+            countdown = 10;
             document.getElementById('countdown').textContent = countdown;
         }
         
@@ -198,7 +215,7 @@
                 
                 if (countdown <= 0) {
                     refreshFrame();
-                    countdown = 30;
+                    countdown = 10;
                 }
             }, 1000);
         }

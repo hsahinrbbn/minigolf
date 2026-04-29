@@ -1,0 +1,200 @@
+{
+    "event":  {
+                  "name":  "Mini Golf Tournament",
+                  "date":  "2026-04-28"
+              },
+    "teams":  [
+                  {
+                      "name":  "Team Hassin",
+                      "members":  [
+                                      "Golan Hassin",
+                                      "David Castelli",
+                                      "Shagun Seth",
+                                      "Yug Batra"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Kiazyk",
+                      "members":  [
+                                      "Phil Kiazyk",
+                                      "Anthony Lenzo",
+                                      "Michael Donally",
+                                      "Colby Todd"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Burfoot-Clark",
+                      "members":  [
+                                      "Kade Burfoot-Clark",
+                                      "Joe Barber",
+                                      "Michael Cortese",
+                                      "Maria Goretti Gohla"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Larkin",
+                      "members":  [
+                                      "Phil Larkin",
+                                      "Wade Lyon",
+                                      "Dennis Cheung"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Shelegey",
+                      "members":  [
+                                      "Steve Shelegey",
+                                      "Jiayi Liu",
+                                      "Sruthi Raju",
+                                      "Faris Nour"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Diedrich",
+                      "members":  [
+                                      "Jake Diedrich",
+                                      "Annie Zhong",
+                                      "Leah Wan",
+                                      "Dilvir Saini"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Madira",
+                      "members":  [
+                                      "Pramod Madira",
+                                      "Ankur Budhraja",
+                                      "Pavel Klug",
+                                      "Vlad Yarushin"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Metula",
+                      "members":  [
+                                      "Edi Yehuda Metula",
+                                      "Nasim Sepehri"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Ghazi",
+                      "members":  [
+                                      "Amar Ghazi",
+                                      "Raija Pearce",
+                                      "Greg Tomalik",
+                                      "Ona Osanakpo"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Legault",
+                      "members":  [
+                                      "Denis Legault",
+                                      "Krista Lewis",
+                                      "Deryk Coghlan",
+                                      "Abed Qubbaj"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Neroth",
+                      "members":  [
+                                      "Shameer Neroth",
+                                      "Vinn Sunder",
+                                      "Dou Jin",
+                                      "Fabrice Nguessan"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Sherk",
+                      "members":  [
+                                      "Laura Sherk",
+                                      "Adam Sakauye",
+                                      "Molly Foley",
+                                      "Sasha Loewen Cook"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Diallo",
+                      "members":  [
+                                      "Yaya Diallo",
+                                      "Lana Sheldon",
+                                      "Tamara Di Millo",
+                                      "Evan Sloan"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Sahin",
+                      "members":  [
+                                      "Hurol Sahin",
+                                      "Diane Watson",
+                                      "Mahnoor Fatima",
+                                      "Grisha Patel"
+                                  ]
+                  },
+                  {
+                      "name":  "Individuals",
+                      "members":  [
+                                      "Darren Prater",
+                                      "Trina Pearce",
+                                      "Petrena Ferguson",
+                                      "Connie Ellis",
+                                      "Mark Riley"
+                                  ]
+                  }
+              ],
+    "holes":  [
+                  {
+                      "number":  1,
+                      "name":  "Birdie RAMPage",
+                      "par":  3
+                  },
+                  {
+                      "number":  2,
+                      "name":  "Lab Putters",
+                      "par":  4
+                  },
+                  {
+                      "number":  3,
+                      "name":  "AS Team",
+                      "par":  5
+                  },
+                  {
+                      "number":  4,
+                      "name":  "Tech Putts",
+                      "par":  3
+                  },
+                  {
+                      "number":  5,
+                      "name":  "Project X Team",
+                      "par":  6
+                  },
+                  {
+                      "number":  6,
+                      "name":  "Steve\u0027s Team",
+                      "par":  5
+                  },
+                  {
+                      "number":  7,
+                      "name":  "The Four Corners",
+                      "par":  4
+                  },
+                  {
+                      "number":  8,
+                      "name":  "Dev Ops Corner",
+                      "par":  3
+                  },
+                  {
+                      "number":  9,
+                      "name":  "DBS Team Area",
+                      "par":  4
+                  },
+                  {
+                      "number":  10,
+                      "name":  "The Process",
+                      "par":  6
+                  }
+              ],
+    "msFormsUrl":  "https://forms.office.com/Pages/ResponsePage.aspx?id=3HGmKX7tVEqx5Y2h60ldw1u5ihd0gv1NgiIcvqBwaUtUMVJFMkVXWVNVRExaTk42U0hJVU1IMjhSSC4u",
+    "questionIds":  {
+                        "team":  "r435555ec07c643a3832af55d3af266a2",
+                        "member":  "YOUR_MEMBER_QUESTION_ID_HERE",
+                        "hole":  "rd835b512715d4a779d9334a32a64bc98",
+                        "strokes":  "rd4aa5dc3c8ed4fea845f772c6ed15cd8"
+                    }
+}

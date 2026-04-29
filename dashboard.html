@@ -118,6 +118,10 @@
             body {
                 padding: 10px;
             }
+            
+            .dashboard-row {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -127,15 +131,29 @@
             <h1>⛳ Mini Golf Leaderboard</h1>
         </div>
         
-        <div class="dashboard-frame">
-            <div class="frame-header">🏆 Leaderboard</div>
-            <div class="frame-content">
-                <iframe 
-                    id="leaderboardFrame"
-                    height="250" 
-                    scrolling="no" 
-                    src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=PivotTable1&wdHideGridlines=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
-                </iframe>
+        <div class="dashboard-row">
+            <div class="dashboard-frame half">
+                <div class="frame-header">🏆 Team Leaderboard</div>
+                <div class="frame-content">
+                    <iframe 
+                        id="teamLeaderboardFrame"
+                        height="300" 
+                        scrolling="no" 
+                        src="https://sonusnetworks.sharepoint.com/sites/PMBITeam/_layouts/15/Doc.aspx?sourcedoc={c084a68d-6c06-4a1b-8b07-c4be3b56e230}&action=embedview&wdAllowInteractivity=False&Item=PivotTable1&wdHideGridlines=True&wdInConfigurator=True&wdInConfigurator=True&edaebf=rslc0">
+                    </iframe>
+                </div>
+            </div>
+            
+            <div class="dashboard-frame half">
+                <div class="frame-header">🧑 Individual Leaderboard</div>
+                <div class="frame-content">
+                    <iframe 
+                        id="individualLeaderboardFrame"
+                        height="300" 
+                        scrolling="no" 
+                        src="YOUR_INDIVIDUAL_PIVOT_TABLE_EMBED_URL_HERE">
+                    </iframe>
+                </div>
             </div>
         </div>
         

@@ -158,9 +158,16 @@
         </div>
         
         <div class="form-group">
-            <label>� Select Your Team</label>
-            <select id="playerName">
+            <label>👥 Select Your Team</label>
+            <select id="teamSelect" onchange="updateMembers()">
                 <option value="">-- Select Team --</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>🧑 Select Team Member</label>
+            <select id="memberSelect">
+                <option value="">-- Select Member --</option>
             </select>
         </div>
         
@@ -193,84 +200,119 @@
 
     <script>
         // ============================================================
-        // CONFIGURATION - Update these values
+        // CONFIGURATION - Loaded from config.json
         // ============================================================
         
-        // Microsoft Forms URL and question IDs
-        const MS_FORMS_BASE_URL = 'https://forms.office.com/Pages/ResponsePage.aspx?id=3HGmKX7tVEqx5Y2h60ldw1u5ihd0gv1NgiIcvqBwaUtUMVJFMkVXWVNVRExaTk42U0hJVU1IMjhSSC4u';
-        const QUESTION_IDS = {
-            team: 'r435555ec07c643a3832af55d3af266a2',
-            hole: 'rd835b512715d4a779d9334a32a64bc98',
-            strokes: 'rd4aa5dc3c8ed4fea845f772c6ed15cd8'
-        };
+        let CONFIG = null;
+        let HOLE_PARS = {};
+        let HOLE_NAMES = {};
+        let TEAMS = [];
         
-        // Par values for each hole (customize as needed)
-        const HOLE_PARS = {
-            1: 3, 2: 3, 3: 3, 4: 3, 5: 3,
-            6: 3, 7: 3, 8: 3, 9: 3, 10: 3
-        };
-        
-        // Hole names (customize as needed)
-        const HOLE_NAMES = {
-            1: "Birdie RAMPage",
-            2: "Lab Putters",
-            3: "AS Team",
-            4: "Tech Putts",
-            5: "Project X Team",
-            6: "Steve's Team",
-            7: "The Four Corners",
-            8: "Dev Ops Corner",
-            9: "DBS Team Area",
-            10: "The Process"
-        };
-        
-        // Team names for dropdown (customize as needed)
-        const TEAMS = [
-            "Team 1",
-            "Team 2",
-            "Team 3",
-            "Team 4",
-            "Team 5"
-        ];
-        
-        // ============================================================
-        // INITIALIZATION
-        // ============================================================
+        // MS Forms settings (will be loaded from config.json)
+        let MS_FORMS_BASE_URL = '';
+        let QUESTION_IDS = {};
         
         // Get hole number from URL parameter: ?hole=5
         const params = new URLSearchParams(window.location.search);
         const holeNumber = params.get('hole') || '1';
-        const parValue = HOLE_PARS[parseInt(holeNumber)] || 3;
-        const holeName = HOLE_NAMES[parseInt(holeNumber)] || '';
+        let parValue = 3;
+        let holeName = '';
+        let selectedStrokes = 3;
         
-        // Set hole, name, and par display
-        document.getElementById('holeNum').textContent = holeNumber;
-        document.getElementById('holeName').textContent = holeName;
-        document.getElementById('parNum').textContent = parValue;
+        // ============================================================
+        // LOAD CONFIG AND INITIALIZE
+        // ============================================================
         
-        // Populate team dropdown
-        const teamSelect = document.getElementById('playerName');
-        TEAMS.forEach(team => {
-            const option = document.createElement('option');
-            option.value = team;
-            option.textContent = team;
-            teamSelect.appendChild(option);
-        });
-        
-        // Restore last selected team from localStorage
-        const savedTeam = localStorage.getItem('minigolf_player');
-        if (savedTeam && TEAMS.includes(savedTeam)) {
-            teamSelect.value = savedTeam;
+        async function loadConfig() {
+            try {
+                const response = await fetch('config.json');
+                CONFIG = await response.json();
+                
+                // Load MS Forms settings
+                MS_FORMS_BASE_URL = CONFIG.msFormsUrl;
+                QUESTION_IDS = CONFIG.questionIds;
+                
+                // Build hole data
+                CONFIG.holes.forEach(hole => {
+                    HOLE_PARS[hole.number] = hole.par;
+                    HOLE_NAMES[hole.number] = hole.name;
+                });
+                
+                // Load teams
+                TEAMS = CONFIG.teams;
+                
+                // Initialize the form
+                initializeForm();
+            } catch (error) {
+                console.error('Error loading config:', error);
+                showStatus('Error loading configuration', 'error');
+            }
         }
         
-        // Pre-select par as default strokes
-        let selectedStrokes = parValue;
-        document.querySelectorAll('.stroke-btn').forEach(btn => {
-            btn.classList.remove('selected');
-            if (parseInt(btn.dataset.strokes) === parValue) {
-                btn.classList.add('selected');
+        function initializeForm() {
+            // Set hole info
+            parValue = HOLE_PARS[parseInt(holeNumber)] || 3;
+            holeName = HOLE_NAMES[parseInt(holeNumber)] || '';
+            selectedStrokes = parValue;
+            
+            document.getElementById('holeNum').textContent = holeNumber;
+            document.getElementById('holeName').textContent = holeName;
+            document.getElementById('parNum').textContent = parValue;
+            
+            // Populate team dropdown
+            const teamSelect = document.getElementById('teamSelect');
+            teamSelect.innerHTML = '<option value="">-- Select Team --</option>';
+            TEAMS.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team.name;
+                option.textContent = team.name;
+                teamSelect.appendChild(option);
+            });
+            
+            // Restore last selected team and member from localStorage
+            const savedTeam = localStorage.getItem('minigolf_team');
+            const savedMember = localStorage.getItem('minigolf_member');
+            
+            if (savedTeam) {
+                teamSelect.value = savedTeam;
+                updateMembers();
+                if (savedMember) {
+                    document.getElementById('memberSelect').value = savedMember;
+                }
             }
-        });
+            
+            // Pre-select par as default strokes
+            document.querySelectorAll('.stroke-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (parseInt(btn.dataset.strokes) === parValue) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+        
+        // Update member dropdown when team changes
+        function updateMembers() {
+            const teamSelect = document.getElementById('teamSelect');
+            const memberSelect = document.getElementById('memberSelect');
+            const selectedTeamName = teamSelect.value;
+            
+            memberSelect.innerHTML = '<option value="">-- Select Member --</option>';
+            
+            if (selectedTeamName) {
+                const team = TEAMS.find(t => t.name === selectedTeamName);
+                if (team && team.members) {
+                    team.members.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member;
+                        option.textContent = member;
+                        memberSelect.appendChild(option);
+                    });
+                }
+            }
+        }
+        
+        // Load config on page load
+        loadConfig();
         
         
         // ============================================================
@@ -290,23 +332,32 @@
         // ============================================================
         
         function submitScore() {
-            const teamName = document.getElementById('playerName').value.trim();
+            const teamName = document.getElementById('teamSelect').value;
+            const memberName = document.getElementById('memberSelect').value;
             const submitBtn = document.getElementById('submitBtn');
             
             // Validation
             if (!teamName) {
                 showStatus('Please select your team', 'error');
-                document.getElementById('playerName').focus();
+                document.getElementById('teamSelect').focus();
                 return;
             }
             
-            // Save team name for next hole
-            localStorage.setItem('minigolf_player', teamName);
+            if (!memberName) {
+                showStatus('Please select team member', 'error');
+                document.getElementById('memberSelect').focus();
+                return;
+            }
+            
+            // Save team and member for next hole
+            localStorage.setItem('minigolf_team', teamName);
+            localStorage.setItem('minigolf_member', memberName);
             
             // Build MS Forms URL with pre-filled values (quotes required by MS Forms)
             // Add timestamp to prevent "draft" popup
             const formUrl = MS_FORMS_BASE_URL + 
                 '&' + QUESTION_IDS.team + '="' + encodeURIComponent(teamName) + '"' +
+                '&' + QUESTION_IDS.member + '="' + encodeURIComponent(memberName) + '"' +
                 '&' + QUESTION_IDS.hole + '="' + encodeURIComponent(holeName) + '"' +
                 '&' + QUESTION_IDS.strokes + '="' + encodeURIComponent(selectedStrokes) + '"' +
                 '&_=' + Date.now();

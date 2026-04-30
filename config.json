@@ -54,7 +54,7 @@
                                       "Jake Diedrich",
                                       "Annie Zhong",
                                       "Leah Wan",
-                                      "Dilvir Saini"
+                                      "Dou Jin"
                                   ]
                   },
                   {
@@ -96,7 +96,7 @@
                       "members":  [
                                       "Shameer Neroth",
                                       "Vinn Sunder",
-                                      "Dou Jin",
+                                      "Keith Wiggins",
                                       "Fabrice Nguessan"
                                   ]
                   },
@@ -106,7 +106,7 @@
                                       "Laura Sherk",
                                       "Adam Sakauye",
                                       "Molly Foley",
-                                      "Sasha Loewen Cook"
+                                      "Connie Ellis"
                                   ]
                   },
                   {
@@ -128,65 +128,81 @@
                                   ]
                   },
                   {
-                      "name":  "Individuals",
+                      "name":  "Team Riley",
                       "members":  [
+                                      "Mark Riley",
+                                      "Hassan Hafeez",
                                       "Darren Prater",
+                                      "Scott Thompson"
+                                  ]
+                  },
+                  {
+                      "name":  "Team Pearce",
+                      "members":  [
                                       "Trina Pearce",
                                       "Petrena Ferguson",
-                                      "Connie Ellis",
-                                      "Mark Riley"
+                                      "Sasha Loewen Cook",
+                                      "Don Devenny"
                                   ]
+                  },
+                  {
+                      "name":  "Team Gravel",
+                      "members":  [
+                                      "Sylvain Gravel",
+                                      "Andrew Rahn",
+                                      "Medyan Naser"
+								]
                   }
               ],
     "holes":  [
                   {
                       "number":  1,
-                      "name":  "1- Birdie RAMPage",
+                      "name":  "Birdie RAMPage",
                       "par":  3
                   },
                   {
                       "number":  2,
-                      "name":  "2- Lab Putters",
+                      "name":  "Lab Putters",
                       "par":  4
                   },
                   {
                       "number":  3,
-                      "name":  "3- AS Team",
+                      "name":  "AS Team",
                       "par":  5
                   },
                   {
                       "number":  4,
-                      "name":  "4- Tech Putts",
+                      "name":  "Tech Putts",
                       "par":  3
                   },
                   {
                       "number":  5,
-                      "name":  "5- Project X Team",
+                      "name":  "Project X Team",
                       "par":  6
                   },
                   {
                       "number":  6,
-                      "name":  "6- Steve's Team",
+                      "name":  "Steve\u0027s Team",
                       "par":  5
                   },
                   {
                       "number":  7,
-                      "name":  "7- The Four Corners",
+                      "name":  "The Four Corners",
                       "par":  4
                   },
                   {
                       "number":  8,
-                      "name":  "8- Dev Ops Corner",
+                      "name":  "Dev Ops Corner",
                       "par":  3
                   },
                   {
                       "number":  9,
-                      "name":  "9- DBS Team Area",
+                      "name":  "DBS Team Area",
                       "par":  4
                   },
                   {
                       "number":  10,
-                      "name":  "10- The Process",
+                      "name":  "The Process",
                       "par":  6
                   }
               ],
@@ -199,8 +215,8 @@
                     },
     "msFormsVoteUrl":  "https://forms.office.com/Pages/ResponsePage.aspx?id=3HGmKX7tVEqx5Y2h60ldw1u5ihd0gv1NgiIcvqBwaUtUNFZSV1hOSVhJUEwwT1hQSVhXVTNaWlZFSS4u",
     "voteQuestionIds":  {
-                        "team":  "r657cb8b998cb4dfa96b48781b09e7fa5",
-                        "member":  "r00d95c9af23c49df96f6f9d97e30fc9c",
-                        "hole":  "r18c2b22f7bc4482bbeb6265509edf43a"
-                    }
+                            "team":  "r657cb8b998cb4dfa96b48781b09e7fa5",
+                            "member":  "r00d95c9af23c49df96f6f9d97e30fc9c",
+                            "hole":  "r18c2b22f7bc4482bbeb6265509edf43a"
+                        }
 }

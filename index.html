@@ -323,7 +323,15 @@
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.stroke-btn').forEach(b => b.classList.remove('selected'));
                 this.classList.add('selected');
-                selectedStrokes = parseInt(this.dataset.strokes);
+                const strokeValue = parseInt(this.dataset.strokes);
+                // Map to MS Form dropdown values
+                if (strokeValue === 1) {
+                    selectedStrokes = "Hole in One!";
+                } else if (strokeValue === 10) {
+                    selectedStrokes = "10+";
+                } else {
+                    selectedStrokes = strokeValue.toString();
+                }
             });
         });
         

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Hole Design Vote</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFB347 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #FF6B6B;
+            margin: 0;
+            font-size: 28px;
+        }
+        .header p {
+            color: #555;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+        .emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #FF6B6B;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,107,107,0.4);
+        }
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+        .status.success {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+        }
+        .status.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <div class="emoji">🏆</div>
+            <h1>Best Hole Design</h1>
+            <p>Vote for your favorite!</p>
+        </div>
+        
+        <div class="form-group">
+            <label>👥 Select Your Team</label>
+            <select id="teamSelect" onchange="updateMembers()">
+                <option value="">-- Select Team --</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>🧑 Select Team Member</label>
+            <select id="memberSelect">
+                <option value="">-- Select Member --</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>⛳ Select Best Hole</label>
+            <select id="holeSelect">
+                <option value="">-- Select Hole --</option>
+            </select>
+        </div>
+        
+        <button class="submit-btn" id="submitBtn" onclick="submitVote()">
+            Submit Vote
+        </button>
+        
+        <div class="status" id="status"></div>
+        
+        <div class="footer">
+            Vote for the best designed hole
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONFIGURATION - Loaded from config.json
+        // ============================================================
+        
+        let CONFIG = null;
+        let TEAMS = [];
+        let HOLES = [];
+        
+        // MS Forms settings (will be loaded from config.json)
+        let MS_FORMS_BASE_URL = '';
+        let QUESTION_IDS = {};
+        
+        let selectedHole = '';
+        
+        // ============================================================
+        // LOAD CONFIG AND INITIALIZE
+        // ============================================================
+        
+        async function loadConfig() {
+            try {
+                const response = await fetch('config.json');
+                CONFIG = await response.json();
+                
+                // Load MS Forms settings
+                MS_FORMS_BASE_URL = CONFIG.msFormsUrl;
+                QUESTION_IDS = CONFIG.questionIds;
+                
+                // Load teams and holes
+                TEAMS = CONFIG.teams;
+                HOLES = CONFIG.holes;
+                
+                // Initialize the form
+                initializeForm();
+            } catch (error) {
+                console.error('Error loading config:', error);
+                showStatus('Error loading configuration', 'error');
+            }
+        }
+        
+        function initializeForm() {
+            // Populate team dropdown
+            const teamSelect = document.getElementById('teamSelect');
+            teamSelect.innerHTML = '<option value="">-- Select Team --</option>';
+            TEAMS.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team.name;
+                option.textContent = team.name;
+                teamSelect.appendChild(option);
+            });
+            
+            // Populate hole dropdown
+            const holeSelect = document.getElementById('holeSelect');
+            holeSelect.innerHTML = '<option value="">-- Select Hole --</option>';
+            HOLES.forEach(hole => {
+                const option = document.createElement('option');
+                option.value = hole.name;
+                option.textContent = hole.number + ' - ' + hole.name;
+                holeSelect.appendChild(option);
+            });
+            
+            // Restore last selected team and member from localStorage
+            const savedTeam = localStorage.getItem('vote_team');
+            const savedMember = localStorage.getItem('vote_member');
+            
+            if (savedTeam) {
+                teamSelect.value = savedTeam;
+                updateMembers();
+                if (savedMember) {
+                    document.getElementById('memberSelect').value = savedMember;
+                }
+            }
+        }
+        
+        // Update member dropdown when team changes
+        function updateMembers() {
+            const teamSelect = document.getElementById('teamSelect');
+            const memberSelect = document.getElementById('memberSelect');
+            const selectedTeamName = teamSelect.value;
+            
+            memberSelect.innerHTML = '<option value="">-- Select Member --</option>';
+            
+            if (selectedTeamName) {
+                const team = TEAMS.find(t => t.name === selectedTeamName);
+                if (team && team.members) {
+                    team.members.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member;
+                        option.textContent = member;
+                        memberSelect.appendChild(option);
+                    });
+                }
+            }
+        }
+        
+        // Load config on page load
+        loadConfig();
+        
+        
+        // ============================================================
+        // SUBMIT VOTE
+        // ============================================================
+        
+        function submitVote() {
+            const teamName = document.getElementById('teamSelect').value;
+            const memberName = document.getElementById('memberSelect').value;
+            const holeName = document.getElementById('holeSelect').value;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Validation
+            if (!teamName) {
+                showStatus('Please select your team', 'error');
+                document.getElementById('teamSelect').focus();
+                return;
+            }
+            
+            if (!memberName) {
+                showStatus('Please select team member', 'error');
+                document.getElementById('memberSelect').focus();
+                return;
+            }
+            
+            if (!holeName) {
+                showStatus('Please select a hole', 'error');
+                document.getElementById('holeSelect').focus();
+                return;
+            }
+            
+            // Save team and member for next vote
+            localStorage.setItem('vote_team', teamName);
+            localStorage.setItem('vote_member', memberName);
+            
+            // Build MS Forms URL with pre-filled values (quotes required by MS Forms)
+            // Add timestamp to prevent "draft" popup
+            const formUrl = MS_FORMS_BASE_URL + 
+                '&' + QUESTION_IDS.team + '="' + encodeURIComponent(teamName) + '"' +
+                '&' + QUESTION_IDS.member + '="' + encodeURIComponent(memberName) + '"' +
+                '&' + QUESTION_IDS.hole + '="' + encodeURIComponent(holeName) + '"' +
+                '&_=' + Date.now();
+            
+            // Show success message
+            showStatus('✅ Vote submitted! Redirecting...', 'success');
+            
+            // Redirect to MS Forms after brief delay
+            setTimeout(() => {
+                window.location.href = formUrl;
+            }, 500);
+        }
+        
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = 'status ' + type;
+        }
+        
+    </script>
+</body>
+</html>

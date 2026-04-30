@@ -178,9 +178,9 @@
                 const response = await fetch('config.json');
                 CONFIG = await response.json();
                 
-                // Load MS Forms settings
-                MS_FORMS_BASE_URL = CONFIG.msFormsUrl;
-                QUESTION_IDS = CONFIG.questionIds;
+                // Load MS Forms settings for voting
+                MS_FORMS_BASE_URL = CONFIG.msFormsVoteUrl;
+                QUESTION_IDS = CONFIG.voteQuestionIds;
                 
                 // Load teams and holes
                 TEAMS = CONFIG.teams;
